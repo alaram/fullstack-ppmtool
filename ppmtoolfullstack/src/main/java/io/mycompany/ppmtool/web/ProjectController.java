@@ -22,9 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/project")
-@CrossOrigin
 public class ProjectController {
 
     @Autowired
@@ -33,6 +33,12 @@ public class ProjectController {
     @Autowired
     private MapValidationErrorService mapValidationErrorService;
 
+    /**
+     *
+     * @param project
+     * @param bindingResult
+     * @return
+     */
     @PostMapping("")
     public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project, BindingResult bindingResult) {
         ResponseEntity<?> errorMap =  mapValidationErrorService.MapValidationService(bindingResult);
@@ -43,15 +49,29 @@ public class ProjectController {
         return new ResponseEntity<>(project, HttpStatus.CREATED);
     }
 
+    /**
+     *
+     * @param projectId
+     * @return
+     */
     @GetMapping("/{projectId}")
     public ResponseEntity<?> getProjectId(@PathVariable String projectId) {
         Project project = projectService.findProjectByIdentifier(projectId.toUpperCase());
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
+    /**
+     *
+     * @return
+     */
     @GetMapping("/all")
     public Iterable<Project> getAllProjects() { return projectService.findAllProjects(); }
 
+    /**
+     *
+     * @param projectId
+     * @return
+     */
     @DeleteMapping("/{projectId}")
     public ResponseEntity<?> deleteProjectByIdentifier(@PathVariable String projectId) {
         projectService.deleteProjectByIdentifier(projectId.toUpperCase());
