@@ -15,4 +15,11 @@ public interface ProjectTaskRepository extends CrudRepository<ProjectTask, Long>
      * @return
      */
     List<ProjectTask> findByProjectIdentifierOrderByPriority(String id);
+
+    /**
+     *
+     * @param pt_id
+     * @return
+     */
+    ProjectTask findByProjectSequence(String pt_id);
 }

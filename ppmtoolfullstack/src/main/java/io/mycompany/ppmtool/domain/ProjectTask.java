@@ -12,7 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.PreUpdate;
 import javax.persistence.PrePersist;
 import javax.persistence.JoinColumn;
-import javax.persistence.CascadeType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 
@@ -40,7 +39,7 @@ public class ProjectTask {
     @Column(updatable = false)
     private String projectIdentifier;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "backlog_id", updatable = false, nullable = false)
     @JsonIgnore
     private Backlog backlog;
