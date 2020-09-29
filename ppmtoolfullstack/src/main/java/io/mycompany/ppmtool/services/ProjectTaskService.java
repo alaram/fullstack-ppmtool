@@ -1,10 +1,12 @@
 package io.mycompany.ppmtool.services;
 
 import io.mycompany.ppmtool.domain.Backlog;
+import io.mycompany.ppmtool.domain.Project;
 import io.mycompany.ppmtool.domain.ProjectTask;
 
 import io.mycompany.ppmtool.exceptions.ProjectNotFoundException;
 import io.mycompany.ppmtool.repositories.BacklogRepository;
+import io.mycompany.ppmtool.repositories.ProjectRepository;
 import io.mycompany.ppmtool.repositories.ProjectTaskRepository;
 
 import org.springframework.stereotype.Service;
@@ -18,6 +20,9 @@ public class ProjectTaskService {
 
     @Autowired
     private ProjectTaskRepository projectTaskRepository;
+
+    @Autowired
+    private ProjectRepository projectRepository;
 
     /**
      *
@@ -47,7 +52,7 @@ public class ProjectTaskService {
             projectTask.setProjectIdentifier(projectIdentifier);
 
             //Initial Priority when priority is NULL
-            if (projectTask.getPriority() == null) {
+            if (projectTask.getPriority() == 0 || projectTask.getPriority() == null) {
                 projectTask.setPriority(3);
             }
 
@@ -68,7 +73,11 @@ public class ProjectTaskService {
      * @return
      */
     public Iterable<ProjectTask> findBacklogById(String id) {
-        if (projectTaskRepository.findByProjectIdentifierOrderByPriority(id).size() == 0) {
+        Project project = projectRepository.findByProjectIdentifier(id);
+
+        if (project == null) {
+
+        //if (projectTaskRepository.findByProjectIdentifierOrderByPriority(id).size() == 0) {
             throw new ProjectNotFoundException("Project with ID: '" + id + "' does not exist!");
         }
 
