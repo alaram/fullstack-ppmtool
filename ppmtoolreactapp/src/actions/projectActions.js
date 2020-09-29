@@ -1,7 +1,12 @@
 import axios from "axios";
 import { GET_ERRORS, GET_PROJECTS, GET_PROJECT, DELETE_PROJECT } from "./types";
 
-// Create a project
+/**
+ * Create a project
+ *
+ * @param {*} project
+ * @param {*} history
+ */
 export const createProject = (project, history) => async (dispatch) => {
   try {
     await axios.post("/api/project", project);
@@ -18,7 +23,9 @@ export const createProject = (project, history) => async (dispatch) => {
   }
 };
 
-// Retrieve all projects
+/**
+ * Retrieve all projects
+ */
 export const getProjects = () => async (dispatch) => {
   const res = await axios.get("/api/project/all");
   dispatch({
@@ -27,7 +34,12 @@ export const getProjects = () => async (dispatch) => {
   });
 };
 
-// Retrieve project by ID
+/**
+ *  Retrieve project by ID
+ *
+ * @param {*} id
+ * @param {*} history
+ */
 export const getProject = (id, history) => async (dispatch) => {
   try {
     const res = await axios.get(`/api/project/${id}`);
@@ -40,7 +52,12 @@ export const getProject = (id, history) => async (dispatch) => {
   }
 };
 
-// Delete project
+/**
+ * Delete project
+ *
+ * @param {*} id
+ * @param {*} history
+ */
 export const deleteProject = (id, history) => async (dispatch) => {
   if (
     window.confirm(

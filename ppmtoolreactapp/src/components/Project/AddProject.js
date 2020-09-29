@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { createProject } from "./../../actions/projectActions";
-import { withRouter } from "react-router-dom";
 import classnames from "classnames";
 
 class AddProject extends Component {
