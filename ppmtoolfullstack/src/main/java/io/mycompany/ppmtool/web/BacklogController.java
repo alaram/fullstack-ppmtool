@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @CrossOrigin
 @RestController
@@ -38,29 +39,31 @@ public class BacklogController {
      * @param projectTask
      * @param bindingResult
      * @param backlog_id
+     * @param principal
      * @return
      */
     @PostMapping("/{backlog_id}")
     public ResponseEntity<?> addPTBacklog(@Valid @RequestBody ProjectTask projectTask,
                                           BindingResult bindingResult,
-                                          @PathVariable String backlog_id) {
+                                          @PathVariable String backlog_id,
+                                          Principal principal) {
 
         ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(bindingResult);
         if (errorMap != null) return errorMap;
 
-        ProjectTask projectTask1 = projectTaskService.addProjectTask(backlog_id, projectTask);
-
+        ProjectTask projectTask1 = projectTaskService.addProjectTask(backlog_id, projectTask, principal.getName());
         return new ResponseEntity<>(projectTask1, HttpStatus.CREATED);
     }
 
     /**
      *
      * @param backlog_id
+     * @param principal
      * @return
      */
     @GetMapping("/{backlog_id}")
-    public Iterable<ProjectTask> getProjectBacklog(@PathVariable String backlog_id) {
-        return projectTaskService.findBacklogById(backlog_id);
+    public Iterable<ProjectTask> getProjectBacklog(@PathVariable String backlog_id, Principal principal) {
+        return projectTaskService.findBacklogById(backlog_id, principal.getName());
     }
 
     /**
@@ -70,8 +73,8 @@ public class BacklogController {
      * @return
      */
     @GetMapping("/{backlog_id}/{pt_id}")
-    public ResponseEntity<?> getProjectTask(@PathVariable String backlog_id, @PathVariable String pt_id) {
-        ProjectTask projectTask = projectTaskService.findPTByProjectSequence(backlog_id, pt_id);
+    public ResponseEntity<?> getProjectTask(@PathVariable String backlog_id, @PathVariable String pt_id, Principal principal) {
+        ProjectTask projectTask = projectTaskService.findPTByProjectSequence(backlog_id, pt_id, principal.getName());
         return new ResponseEntity<>(projectTask, HttpStatus.OK);
     }
 
@@ -87,12 +90,13 @@ public class BacklogController {
     public ResponseEntity<?> updateProjectTask(@Valid @RequestBody ProjectTask projectTask,
                                                BindingResult bindingResult,
                                                @PathVariable String backlog_id,
-                                               @PathVariable String pt_id) {
+                                               @PathVariable String pt_id,
+                                               Principal principal) {
 
         ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(bindingResult);
         if (errorMap != null) return errorMap;
 
-        ProjectTask updatedTask = projectTaskService.updateByProjectSequence(projectTask, backlog_id, pt_id);
+        ProjectTask updatedTask = projectTaskService.updateByProjectSequence(projectTask, backlog_id, pt_id, principal.getName());
         return new ResponseEntity<>(updatedTask, HttpStatus.OK);
     }
 
@@ -103,8 +107,10 @@ public class BacklogController {
      * @return
      */
     @DeleteMapping("/{backlog_id}/{pt_id}")
-    public ResponseEntity<String> deleteProjectTask(@PathVariable String backlog_id, @PathVariable String pt_id) {
-        projectTaskService.deletePTByProjectSequence(backlog_id, pt_id);
+    public ResponseEntity<String> deleteProjectTask(@PathVariable String backlog_id,
+                                                    @PathVariable String pt_id,
+                                                    Principal principal) {
+        projectTaskService.deletePTByProjectSequence(backlog_id, pt_id, principal.getName());
         return new ResponseEntity<>("Project task '" + pt_id + "' was successfully deleted!", HttpStatus.OK);
     }
 }

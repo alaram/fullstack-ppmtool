@@ -14,4 +14,11 @@ public interface ProjectRepository extends CrudRepository<Project, Long> {
      * @return
      */
     Project findByProjectIdentifier(String project);
+
+    /**
+     *
+     * @param username
+     * @return
+     */
+    Iterable<Project> findAllByProjectLeader(String username);
 }

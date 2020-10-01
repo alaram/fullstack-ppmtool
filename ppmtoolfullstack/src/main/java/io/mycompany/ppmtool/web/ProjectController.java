@@ -2,6 +2,8 @@ package io.mycompany.ppmtool.web;
 
 import javax.validation.Valid;
 
+import java.security.Principal;
+
 import io.mycompany.ppmtool.domain.Project;
 import io.mycompany.ppmtool.services.ProjectService;
 import io.mycompany.ppmtool.services.MapValidationErrorService;
@@ -37,44 +39,52 @@ public class ProjectController {
      *
      * @param project
      * @param bindingResult
+     * @param principal
      * @return
      */
     @PostMapping("")
-    public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project, BindingResult bindingResult) {
+    public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project,
+                                              BindingResult bindingResult,
+                                              Principal principal) {
         ResponseEntity<?> errorMap =  mapValidationErrorService.MapValidationService(bindingResult);
         if (errorMap != null)
             return errorMap;
 
-        Project project1 = projectService.saveOrUpdateProject(project);
+        Project project1 = projectService.saveOrUpdateProject(project, principal.getName());
         return new ResponseEntity<>(project, HttpStatus.CREATED);
     }
 
     /**
      *
      * @param projectId
+     * @param principal
      * @return
      */
     @GetMapping("/{projectId}")
-    public ResponseEntity<?> getProjectId(@PathVariable String projectId) {
-        Project project = projectService.findProjectByIdentifier(projectId.toUpperCase());
+    public ResponseEntity<?> getProjectId(@PathVariable String projectId, Principal principal) {
+        Project project = projectService.findProjectByIdentifier(projectId.toUpperCase(), principal.getName());
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
     /**
      *
+     * @param principal
      * @return
      */
     @GetMapping("/all")
-    public Iterable<Project> getAllProjects() { return projectService.findAllProjects(); }
+    public Iterable<Project> getAllProjects(Principal principal) {
+        return projectService.findAllProjects(principal.getName());
+    }
 
     /**
      *
      * @param projectId
+     * @param principal
      * @return
      */
     @DeleteMapping("/{projectId}")
-    public ResponseEntity<?> deleteProjectByIdentifier(@PathVariable String projectId) {
-        projectService.deleteProjectByIdentifier(projectId.toUpperCase());
+    public ResponseEntity<?> deleteProjectByIdentifier(@PathVariable String projectId, Principal principal) {
+        projectService.deleteProjectByIdentifier(projectId.toUpperCase(), principal.getName());
         return new ResponseEntity<>("Project with id '" + projectId + "' was deleted", HttpStatus.OK);
     }
 }
