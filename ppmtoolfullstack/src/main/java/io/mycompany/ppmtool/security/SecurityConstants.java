@@ -17,6 +17,9 @@ public class SecurityConstants {
 
     // Constants for Configuration and setup of JWT
     public static final String SECRET = "SecretKeyToGenJWTs";
+    // The purpose to have a space after Bearer keyword is to allow
+    // the proper string manipulation of the JWT, so that space has
+    // to be present in order to have a working JWT
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_STRING = "Authorization";
     public static final long EXPIRATION_TIME = 30_000;
