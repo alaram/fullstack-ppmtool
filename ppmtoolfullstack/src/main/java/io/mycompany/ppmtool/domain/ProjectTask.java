@@ -1,5 +1,6 @@
 package io.mycompany.ppmtool.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Date;
@@ -32,8 +33,14 @@ public class ProjectTask {
     private String acceptanceCriteria;
     private Integer priority;
     private String status;
+
+    @JsonFormat(pattern = "yyyyy-mm-dd")
     private Date dueDate;
+
+    @JsonFormat(pattern = "yyyyy-mm-dd")
     private Date created_At;
+
+    @JsonFormat(pattern = "yyyyy-mm-dd")
     private Date updated_At;
 
     @Column(updatable = false)
